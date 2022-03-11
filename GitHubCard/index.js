@@ -1,8 +1,18 @@
+import axios from "axios";
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+axios.get("https://api.github.com/users/tkordysh")
+  .then(res => {
+    document.querySelector(".cards").appendChild(cardMaker(res.data));
+  })
+  .catch(err => {
+    console.error(err);
+  })
+
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -17,6 +27,7 @@
     and append the returned markup to the DOM as a child of .cards
 */
 
+
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
     follow this link in your browser https://api.github.com/users/<Your github name>/followers,
@@ -28,7 +39,18 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ["tetondan", "dustinmyers", "justsml", "luishrd", "bigknell"];
+
+followersArray.forEach(user => {
+  axios.get(`https://api.github.com/users/${user}`)
+  .then(res => {
+    document.querySelector(".cards").appendChild(cardMaker(res.data));
+  })
+  .catch(err => {
+    console.error(err);
+  })
+})
+
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +71,57 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function cardMaker(gitObj) {
+
+  // instantiating elements 
+  const gitCard = document.createElement("div");
+  const gitImg = document.createElement("img");
+  const gitInfo = document.createElement("div");
+  const gitName = document.createElement("h3");
+  const gitUserName = document.createElement("p");
+  const gitLocation = document.createElement("p");
+  const gitProfile = document.createElement("p");
+  const gitLink = document.createElement("a");
+  const gitFollowers = document.createElement("p");
+  const gitFollowing = document.createElement("p");
+  const gitBio = document.createElement("p");
+
+  //setting class names, attrs, text 
+  gitCard.classList.add("card");
+  gitInfo.classList.add("card-info");
+  gitName.classList.add("name");
+  gitUserName.classList.add("username");
+
+  gitImg.src = gitObj.avatar_url;
+  gitName.textContent = gitObj.name;
+  gitUserName.textContent = gitObj.login;
+  gitLocation.textContent = gitObj.location;
+  gitProfile.textContent = "Profile";
+  gitLink.textContent = "Link to profile";
+  gitLink.href = gitObj.html_url;
+  gitFollowers.textContent = `Followers: ${gitObj.followers}`;
+  gitFollowing.textContent = `Following: ${gitObj.following}`;
+  gitBio.textContent = gitObj.bio;
+
+
+  //setting hierarchy 
+  gitCard.appendChild(gitImg);
+  gitCard.appendChild(gitInfo);
+  gitInfo.appendChild(gitName);
+  gitInfo.appendChild(gitUserName);
+  gitInfo.appendChild(gitLocation);
+  gitInfo.appendChild(gitProfile);
+  gitProfile.appendChild(gitLink);
+  gitInfo.appendChild(gitFollowers);
+  gitInfo.appendChild(gitFollowing);
+  gitInfo.appendChild(gitBio);
+
+  //returning card markup
+
+return gitCard;
+
+}
 
 /*
   List of LS Instructors Github username's:
